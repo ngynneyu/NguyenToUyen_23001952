@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 2 · Đặt vé xem phim</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/vendor/vue.global.prod.js" defer></script>
+  <script src="assets/bai2.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">V</span> Thực hành Vue.js</a>
+    <nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html">Bài 1</a><a href="bai2.html" aria-current="page">Bài 2</a><a href="bai3.html">Bài 3</a></nav>
+  </div></header>
+  <main class="container">
+    <div class="page-heading"><span class="eyebrow">BÀI 02 / BIỂU MẪU & SỰ KIỆN</span><h1>Đặt vé xem phim</h1><p>Chọn một suất chiếu và chuẩn bị cho buổi xem phim của bạn.</p></div>
+    <noscript><p class="notice error">Bạn cần bật JavaScript để chạy bài tập Vue.js.</p></noscript>
+    <div id="booking-app" v-cloak>
+      <div class="two-column booking-layout">
+        <!-- .prevent giữ việc xử lý biểu mẫu trên trang, không tải lại. -->
+        <form class="panel form-panel" @submit.prevent="bookTickets" novalidate>
+          <h2>Thông tin đặt vé</h2>
+          <div class="field"><label for="customer-name">Họ tên khách hàng <span class="required">*</span></label><input id="customer-name" v-model.trim="customerName" type="text" autocomplete="name" placeholder="Nhập họ và tên" required></div>
+          <div class="field"><label for="showtime">Suất chiếu</label><select id="showtime" v-model="showtime"><option v-for="time in showtimes" :key="time" :value="time">{{ time }}</option></select></div>
+          <fieldset class="ticket-types"><legend>Loại vé</legend>
+            <label class="ticket-option" :class="{ selected: ticketType === 'standard' }"><input v-model="ticketType" type="radio" name="ticket-type" value="standard"><span><strong>Vé thường</strong><small>70.000 ₫ / vé</small></span></label>
+            <label class="ticket-option" :class="{ selected: ticketType === 'vip' }"><input v-model="ticketType" type="radio" name="ticket-type" value="vip"><span><strong>Vé VIP</strong><small>100.000 ₫ / vé</small></span></label>
+          </fieldset>
+          <div class="field"><label for="quantity">Số lượng vé</label><div class="quantity-control"><button class="quantity-button" type="button" @click="decreaseQuantity" :disabled="quantityValid && quantity <= 1" aria-label="Giảm số lượng">−</button><input id="quantity" v-model.number="quantity" type="number" min="1" max="10" step="1" required :aria-invalid="!quantityValid" aria-describedby="quantity-hint"><button class="quantity-button" type="button" @click="increaseQuantity" :disabled="quantityValid && quantity >= 10" aria-label="Tăng số lượng">+</button></div><small id="quantity-hint" :class="{ 'error-text': !quantityValid }">{{ quantityValid ? 'Từ 1 đến 10 vé cho mỗi đơn.' : 'Vui lòng nhập số nguyên từ 1 đến 10.' }}</small></div>
+          <label class="combo-option"><input id="combo" v-model="withCombo" type="checkbox"><span><strong>Thêm combo bắp & nước</strong><small>45.000 ₫ / đơn đặt vé</small></span></label>
+          <div class="form-actions"><button class="button" type="submit" :disabled="!canBook">Đặt vé</button><button class="button secondary" type="button" @click="resetForm">Đặt lại form</button></div>
+          <p class="muted form-help">Điền họ tên và số lượng hợp lệ để đặt vé. Đây là bài thực hành mô phỏng, không phát sinh thanh toán.</p>
+        </form>
+        <aside class="panel order-panel" aria-label="Chi tiết đơn vé">
+          <div class="movie-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span>PHIM HOẠT HÌNH<br><strong>DORAEMON</strong></span><small>ÂM NHẠC KẾT NỐI TÌNH BẠN</small></div>
+          <div class="order-body"><span class="eyebrow">PHIM ĐANG CHỌN</span><h2>{{ movieTitle }}</h2><p class="muted">Suất chiếu {{ showtime }}</p>
+            <dl class="receipt"><div><dt>{{ ticketType === 'vip' ? 'Vé VIP' : 'Vé thường' }} × {{ quantityValid ? quantity : '—' }}</dt><dd>{{ quantityValid ? formatMoney(ticketSubtotal) : '—' }}</dd></div><div><dt>Combo bắp nước</dt><dd>{{ withCombo ? formatMoney(comboPrice) : 'Không chọn' }}</dd></div></dl>
+            <div class="order-total" aria-live="polite"><span>Tổng thanh toán</span><strong>{{ quantityValid ? formatMoney(total) : '—' }}</strong></div>
+            <p class="muted form-help">Combo được tính một lần cho mỗi đơn.</p>
+          </div>
+        </aside>
+      </div>
+      <section v-if="confirmation" class="notice confirmation" role="status" aria-live="polite">
+        <span class="badge success">Đặt vé thành công</span><h2>Xác nhận đặt vé</h2>
+        <p>Cảm ơn <strong>{{ confirmation.customerName }}</strong>! Thông tin đặt vé của bạn:</p>
+        <dl class="confirmation-grid"><div><dt>Phim</dt><dd>{{ confirmation.movieTitle }}</dd></div><div><dt>Suất chiếu</dt><dd>{{ confirmation.showtime }}</dd></div><div><dt>Loại vé & số lượng</dt><dd>{{ confirmation.ticketLabel }} × {{ confirmation.quantity }}</dd></div><div><dt>Combo bắp nước</dt><dd>{{ confirmation.withCombo ? 'Có (45.000 ₫)' : 'Không' }}</dd></div></dl>
+        <p class="confirmation-total">Tổng tiền: <strong>{{ formatMoney(confirmation.total) }}</strong></p>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 06 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>

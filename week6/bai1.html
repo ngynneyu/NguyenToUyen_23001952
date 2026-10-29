@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 1 · Thẻ thông tin sinh viên</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/vendor/vue.global.prod.js" defer></script>
+  <script src="assets/bai1.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">V</span> Thực hành Vue.js</a>
+    <nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html" aria-current="page">Bài 1</a><a href="bai2.html">Bài 2</a><a href="bai3.html">Bài 3</a></nav>
+  </div></header>
+  <main class="container">
+    <div class="page-heading"><span class="eyebrow">BÀI 01 / HIỂN THỊ DỮ LIỆU</span><h1>Thẻ thông tin sinh viên</h1><p>Chỉnh thông tin ở bên phải và xem thẻ sinh viên cập nhật ngay.</p></div>
+    <noscript><p class="notice error">Bạn cần bật JavaScript để chạy bài tập Vue.js.</p></noscript>
+    <div id="student-app" class="two-column" v-cloak>
+      <section class="panel student-card" aria-label="Thẻ sinh viên">
+        <div class="student-banner"><span>HỒ SƠ SINH VIÊN</span><span class="small-dot" aria-hidden="true"></span></div>
+        <!-- v-bind gắn cả đường dẫn ảnh và nội dung thay thế. -->
+        <img class="avatar" v-bind:src="student.avatar" v-bind:alt="'Ảnh đại diện của ' + student.fullName" width="104" height="104">
+        <div class="student-body">
+          <p class="muted student-code">{{ student.id }}</p>
+          <h2>{{ student.fullName }}</h2>
+          <p class="student-class" v-text="student.className"></p>
+          <span v-if="student.isStudying" class="badge success">Đang học</span>
+          <span v-else class="badge neutral">Đã nghỉ</span>
+          <div class="grade-block">
+            <div><span class="label-text">ĐIỂM TRUNG BÌNH</span><strong class="grade-value">{{ validAverage ? student.average : '—' }}<small>/ 10</small></strong></div>
+            <!-- v-if / v-else-if phân loại theo đúng các mốc trong đề. -->
+            <span class="badge" :class="gradeClass" aria-live="polite">
+              <template v-if="!validAverage">Chưa có điểm hợp lệ</template>
+              <template v-else-if="student.average >= 8">Giỏi</template>
+              <template v-else-if="student.average >= 6.5">Khá</template>
+              <template v-else-if="student.average >= 5">Trung bình</template>
+              <template v-else>Chưa đạt</template>
+            </span>
+          </div>
+          <button class="button secondary full-width" type="button" @click="showIntroduction = !showIntroduction" :aria-expanded="showIntroduction" aria-controls="student-introduction">{{ showIntroduction ? 'Ẩn giới thiệu' : 'Hiện giới thiệu' }}</button>
+          <p id="student-introduction" class="introduction" v-show="showIntroduction">{{ student.introduction }}</p>
+        </div>
+      </section>
+      <section class="panel form-panel">
+        <h2>Chỉnh sửa thông tin</h2><p class="muted panel-description">Thông tin trên thẻ tự cập nhật khi bạn nhập.</p>
+        <div class="field-row">
+          <div class="field"><label for="student-id">Mã sinh viên</label><input id="student-id" v-model.trim="student.id" type="text"></div>
+          <div class="field"><label for="student-class">Lớp</label><input id="student-class" v-model.trim="student.className" type="text"></div>
+        </div>
+        <div class="field"><label for="student-name">Họ tên</label><input id="student-name" v-model.trim="student.fullName" type="text"></div>
+        <div class="field"><label for="student-average">Điểm trung bình</label><input id="student-average" v-model.number="student.average" type="number" min="0" max="10" step="0.1" :aria-invalid="!validAverage" aria-describedby="average-hint"><small id="average-hint" :class="{ 'error-text': !validAverage }">Nhập điểm từ 0 đến 10.</small></div>
+        <label class="check-row"><input id="student-status" v-model="student.isStudying" type="checkbox"><span>Sinh viên đang học</span></label>
+        <div class="field"><label for="student-intro-input">Giới thiệu</label><textarea id="student-intro-input" v-model="student.introduction" rows="3"></textarea></div>
+        <div class="hint"><strong>Các mốc xếp loại</strong><p>Giỏi: 8–10 · Khá: 6,5–dưới 8<br>Trung bình: 5–dưới 6,5 · Chưa đạt: dưới 5</p></div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 06 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>

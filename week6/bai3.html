@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài 3 · Quản lý công việc cá nhân</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/vendor/vue.global.prod.js" defer></script>
+  <script src="assets/bai3.js" defer></script>
+</head>
+<body>
+  <header class="site-header"><div class="header-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">V</span> Thực hành Vue.js</a>
+    <nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html">Bài 1</a><a href="bai2.html">Bài 2</a><a href="bai3.html" aria-current="page">Bài 3</a></nav>
+  </div></header>
+  <main class="container task-container">
+    <div class="page-heading"><span class="eyebrow">BÀI 03 / DANH SÁCH & BỘ LỌC</span><h1>Công việc của tôi</h1></div>
+    <noscript><p class="notice error">Bạn cần bật JavaScript để chạy bài tập Vue.js.</p></noscript>
+    <div id="tasks-app" v-cloak>
+      <section class="stats-grid" aria-label="Thống kê công việc" aria-live="polite"><div class="stat"><span>Tổng công việc</span><strong>{{ totalTasks }}</strong></div><div class="stat"><span>Chưa hoàn thành</span><strong>{{ remainingTasks }}</strong></div><div class="stat"><span>Đã hoàn thành</span><strong class="green-text">{{ completedTasks }}</strong></div></section>
+      <section class="panel task-panel" aria-label="Danh sách công việc">
+        <!-- Gửi form bằng Enter hoặc nút Thêm, .prevent không tải lại trang. -->
+        <form class="add-task-form" @submit.prevent="addTask" novalidate>
+          <div class="field"><label for="new-task">Thêm công việc mới</label><div class="add-task-row"><input id="new-task" v-model.trim="newTask" type="text" placeholder="Bạn cần làm gì hôm nay?" :aria-invalid="Boolean(taskError)" aria-describedby="task-error"><button class="button" type="submit">Thêm <span aria-hidden="true">+</span></button></div><small id="task-error" class="error-text" role="status">{{ taskError }}</small></div>
+        </form>
+        <div class="task-toolbar"><div class="filter-group" role="group" aria-label="Lọc trạng thái"><button v-for="item in filters" :key="item.value" type="button" :class="{ active: filter === item.value }" :aria-pressed="filter === item.value" @click="filter = item.value">{{ item.label }}</button></div><span class="muted result-count">{{ filteredTasks.length }} công việc</span></div>
+        <ul v-if="filteredTasks.length" class="task-list">
+          <li v-for="task in filteredTasks" :key="task.id" class="task-item" :class="{ completed: task.completed }">
+            <label class="task-label"><input v-model="task.completed" type="checkbox"><span>{{ task.name }}</span></label>
+            <button class="delete-button" type="button" @click.stop="deleteTask(task.id)" :aria-label="'Xóa công việc: ' + task.name">Xóa</button>
+          </li>
+        </ul>
+        <div v-else class="empty-state" role="status"><span class="empty-symbol" aria-hidden="true">✓</span><template v-if="totalTasks === 0"><h2>Chưa có công việc nào</h2><p>Thêm công việc đầu tiên để bắt đầu ngày của bạn.</p></template><template v-else-if="filter === 'active'"><h2>Bạn đã hoàn thành mọi việc!</h2><p>Không còn công việc chưa hoàn thành.</p></template><template v-else><h2>Chưa có việc đã hoàn thành</h2><p>Đánh dấu một công việc khi bạn đã làm xong.</p></template></div>
+        <div class="task-footer"><span class="muted">Còn {{ remainingTasks }} việc cần làm</span><button class="text-button" type="button" @click="clearCompleted" :disabled="completedTasks === 0">Xóa các việc đã hoàn thành</button></div>
+      </section>
+      <p class="muted bottom-hint">Nhấn Enter để thêm nhanh. Dữ liệu được giữ trong phiên trang hiện tại.</p>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 06 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>

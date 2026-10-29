@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="208" height="208" viewBox="0 0 208 208" role="img" aria-label="Ảnh minh họa sinh viên">
+  <rect width="208" height="208" rx="104" fill="#e0ede9"/>
+  <path d="M35 208v-25c0-38 31-61 69-61s69 23 69 61v25" fill="#2c6c62"/>
+  <path d="m80 132 24 30 24-30" fill="#f9f9f2"/>
+  <path d="M88 111h32v29c0 16-32 16-32 0z" fill="#e7ac82"/>
+  <ellipse cx="104" cy="83" rx="40" ry="48" fill="#f2bd95"/>
+  <path d="M64 80c-9-39 14-57 43-57 31 0 48 23 37 61l-12-26c-21 11-40 8-56 0z" fill="#273e39"/>
+  <path d="M85 87h4m30 0h4" stroke="#273e39" stroke-width="5" stroke-linecap="round"/>
+  <path d="M94 107q10 8 20 0" fill="none" stroke="#a75e48" stroke-width="3" stroke-linecap="round"/>
+</svg>
