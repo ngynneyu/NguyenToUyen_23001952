@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bài 3 · Giỏ hàng</title>
+  <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css?v=2">
+  <script defer src="assets/vendor/vue.global.prod.js"></script><script defer src="components/DongGioHang.js?v=2"></script><script defer src="assets/bai3.js?v=2"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">V</span> Thực hành Vue.js</a><nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html">Bài 1</a><a href="bai2.html">Bài 2</a><a href="bai3.html" aria-current="page">Bài 3</a></nav></div></header>
+  <main id="main" class="container page-main">
+    <div class="page-heading"><div><p class="eyebrow">BÀI 03 / GIỎ HÀNG TƯƠNG TÁC</p><h1>Giỏ hàng</h1><p class="page-intro">Thay đổi số lượng sản phẩm và theo dõi tổng tiền.</p></div></div>
+    <noscript><p class="notice error">Vui lòng bật JavaScript để sử dụng bài thực hành.</p></noscript>
+    <div id="app" v-cloak>
+      <p v-if="loi" class="notice error" role="alert">{{ loi }}</p><p v-else-if="thongBao" class="notice success" role="status">{{ thongBao }}</p>
+      <div class="cart-layout">
+        <section class="panel" aria-labelledby="cart-title"><div class="panel-heading"><h2 id="cart-title">Giỏ hàng của bạn <span class="count-bubble">({{ gioHang.length }})</span></h2><button type="button" class="text-button" @click="khoiPhucMau">Khôi phục mẫu</button></div>
+          <div v-if="gioHang.length"><div class="cart-column-headings" aria-hidden="true"><span>SẢN PHẨM</span><span>SỐ LƯỢNG</span><span>THÀNH TIỀN</span><span></span></div>
+            <dong-gio-hang v-for="sp in gioHang" :key="sp.id" :id="sp.id" :ten="sp.ten" :don-gia="sp.donGia" :so-luong="sp.soLuong" @doi-so-luong="capNhatSoLuong" @yeu-cau-xoa="xoaSanPham"></dong-gio-hang>
+            <div class="cart-list-footer"> Số lượng mỗi sản phẩm: từ 1 đến 99</div>
+          </div>
+          <div v-else class="empty-state cart-empty"><h2>Giỏ hàng trống</h2><p>Khôi phục dữ liệu mẫu để tiếp tục thực hành.</p><button class="button primary" type="button" @click="khoiPhucMau">Khôi phục giỏ hàng mẫu</button></div>
+        </section>
+        <aside class="panel cart-summary" aria-labelledby="summary-title"><h2 id="summary-title">Tóm tắt giỏ hàng</h2><dl><div><dt>Số loại sản phẩm</dt><dd>{{ gioHang.length }}</dd></div><div><dt>Tổng số lượng</dt><dd id="total-quantity">{{ tongSoLuong }}</dd></div><div class="summary-total"><dt>Tổng tiền</dt><dd id="total-price">{{ dinhDangTien(tongTien) }}</dd></div></dl></aside>
+      </div>
+      <div class="sample-note"><span class="sample-label">GIỎ HÀNG MẪU</span><p>2 bút × 5.000 đ + 3 vở × 12.000 đ = <strong>5 sản phẩm · 46.000 đ</strong></p></div><p class="page-note">Dữ liệu được lưu trong phiên hiện tại. Nút “Khôi phục mẫu” đưa giỏ hàng về dữ liệu ban đầu.</p>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 07 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>

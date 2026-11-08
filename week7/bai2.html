@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bài 2 · Danh mục sản phẩm</title>
+  <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css?v=2">
+  <script defer src="assets/vendor/vue.global.prod.js"></script><script defer src="components/TheSanPham.js?v=3"></script><script defer src="assets/bai2.js?v=3"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">V</span> Thực hành Vue.js</a><nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html">Bài 1</a><a href="bai2.html" aria-current="page">Bài 2</a><a href="bai3.html">Bài 3</a></nav></div></header>
+  <main id="main" class="container page-main">
+    <div class="page-heading"><div><p class="eyebrow">BÀI 02 / DANH MỤC SẢN PHẨM</p><h1>Danh mục sản phẩm</h1><p class="page-intro">Thực hành component, props và trạng thái riêng của từng thẻ.</p></div></div>
+    <noscript><p class="notice error">Vui lòng bật JavaScript để sử dụng bài thực hành.</p></noscript>
+    <div id="app" v-cloak>
+      <p class="catalog-bar">{{ sanPham.length }} sản phẩm</p>
+      <p v-if="loi" class="notice error" role="alert">{{ loi }}</p>
+      <p v-else-if="thongBao" class="notice success" role="status">{{ thongBao }}</p>
+      <section class="product-grid" aria-label="Danh mục sản phẩm">
+        <the-san-pham v-for="sp in sanPham" :key="sp.id" :ten="sp.ten" :gia="sp.gia" :anh="sp.anh" :mo-ta="sp.moTa" :ton-kho="sp.tonKho" @mua="chonMua(sp.id)"></the-san-pham>
+      </section>
+      <p class="catalog-help">Chọn “Xem mô tả” để bật/tắt mô tả riêng của từng sản phẩm.</p>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 07 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>

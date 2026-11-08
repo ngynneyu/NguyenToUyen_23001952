@@ -1,0 +1,13 @@
+# Generated screenshots, archives and reports
+/*-preview.jpg
+/*-preview.png
+/preview.jpg
+/preview.png
+/*.zip
+/TEST_RESULTS.md
+/tmp/
+/output/
+
+# Optional development server and unused illustration
+/tests/preview.cjs
+/assets/images/desk.svg

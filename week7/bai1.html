@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 1 · Quản lý sản phẩm</title>
+  <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css?v=2">
+  <script defer src="assets/vendor/vue.global.prod.js"></script><script defer src="assets/bai1.js?v=3"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Đến nội dung chính</a>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">V</span> Thực hành Vue.js</a><nav aria-label="Điều hướng chính"><a href="index.html">Tổng quan</a><a href="bai1.html" aria-current="page">Bài 1</a><a href="bai2.html">Bài 2</a><a href="bai3.html">Bài 3</a></nav></div></header>
+  <main id="main" class="container page-main">
+    <div class="page-heading"><div><p class="eyebrow">BÀI 01 / QUẢN LÝ SẢN PHẨM</p><h1>Quản lý sản phẩm</h1><p class="page-intro">Tìm kiếm, lọc, sắp xếp và thống kê tồn kho.</p></div></div>
+    <noscript><p class="notice error">Vui lòng bật JavaScript để sử dụng bài thực hành.</p></noscript>
+    <div id="app" v-cloak>
+      <section class="stats-grid" aria-label="Thống kê sản phẩm">
+        <div class="stat-card"><span class="stat-label">SẢN PHẨM HIỂN THỊ</span><div class="stat-value">{{ soSanPhamHienThi }} <span>/ {{ tongSanPham }}</span></div><span class="muted">Theo bộ lọc hiện tại</span></div>
+        <div class="stat-card"><span class="stat-label">GIÁ TRỊ TỒN KHO ĐANG HIỂN THỊ</span><div class="stat-value money-stat">{{ dinhDangTien(tongGiaTriTonKho) }}</div><span class="muted">Đơn giá × số lượng tồn</span></div>
+        <div class="stat-card status-card"><span class="stat-label">TRẠNG THÁI TRANG</span><div class="ready-state">{{ trangThai }}</div><span class="muted">Dữ liệu được cập nhật tức thì</span></div>
+      </section>
+      <p v-if="thongBao" class="notice success" role="status">{{ thongBao }}</p>
+      <div class="inventory-layout">
+        <section class="panel inventory-panel" aria-labelledby="list-title">
+          <div class="panel-heading"><h2 id="list-title">Danh sách sản phẩm</h2><button class="text-button" type="button" @click="xoaBoLoc">Xóa bộ lọc</button></div>
+          <div class="filters">
+            <div class="field search-field"><label for="search">Tìm theo tên</label><input id="search" type="search" v-model="tuKhoa" placeholder="Nhập tên sản phẩm…" :aria-describedby="thongBaoTimKiem ? 'search-hint' : null"></div>
+            <div class="field"><label for="category">Danh mục</label><select id="category" v-model="danhMuc"><option value="">Tất cả danh mục</option><option v-for="dm in cacDanhMuc" :key="dm" :value="dm">{{ dm }}</option></select></div>
+            <div class="field"><label for="sort">Sắp xếp theo giá</label><select id="sort" v-model="sapXep"><option value="">Thứ tự ban đầu</option><option value="tang">Giá tăng dần</option><option value="giam">Giá giảm dần</option></select></div>
+          </div>
+          <p v-if="thongBaoTimKiem" id="search-hint" class="search-hint" role="status">{{ thongBaoTimKiem }}</p>
+          <div class="table-wrap"><table><caption class="sr-only">Sản phẩm phù hợp với bộ lọc hiện tại</caption><thead><tr><th scope="col">Sản phẩm</th><th scope="col">Đơn giá</th><th scope="col">Tồn kho</th><th scope="col">Trạng thái</th><th scope="col"><span class="sr-only">Thao tác</span></th></tr></thead><tbody>
+            <tr v-for="sp in sanPhamHienThi" :key="sp.id"><td><strong>{{ sp.ten }}</strong><span class="table-subtitle">#{{ String(sp.id).padStart(3, '0') }} · {{ sp.danhMuc }}</span></td><td class="nowrap">{{ dinhDangTien(sp.gia) }}</td><td class="stock-cell">{{ sp.tonKho }}</td><td><span class="badge" :class="sp.tonKho > 0 ? 'available' : 'sold-out'">{{ sp.tonKho > 0 ? 'Còn hàng' : 'Hết hàng' }}</span></td><td><button class="delete-button" type="button" @click="xoaSanPham(sp.id)" :aria-label="'Xóa ' + sp.ten">Xóa</button></td></tr>
+            <tr v-if="!sanPhamHienThi.length"><td colspan="5"><div class="empty-state"><h3>Không có sản phẩm phù hợp</h3><p>Thử đổi từ khóa hoặc chọn danh mục khác.</p><button class="button secondary" type="button" @click="xoaBoLoc">Xóa bộ lọc</button></div></td></tr>
+          </tbody></table></div>
+          <div class="table-footer">Đang hiển thị {{ soSanPhamHienThi }} trên {{ tongSanPham }} sản phẩm</div>
+        </section>
+        <aside class="panel add-panel" aria-labelledby="add-title"><div class="panel-heading"><h2 id="add-title">Thêm sản phẩm</h2></div><p class="form-intro">Nhập thông tin sản phẩm cần thêm.</p>
+          <form @submit.prevent="themSanPham" novalidate>
+            <div class="field"><label for="new-name">Tên sản phẩm <span class="required">*</span></label><input id="new-name" v-model="sanPhamMoi.ten" placeholder="Ví dụ: Bút dạ quang" required :aria-invalid="!!loi.ten" :aria-describedby="loi.ten ? 'name-error' : null"><p v-if="loi.ten" id="name-error" class="field-error">{{ loi.ten }}</p></div>
+            <div class="field"><label for="new-price">Đơn giá (đồng) <span class="required">*</span></label><input id="new-price" type="number" min="0.01" step="any" v-model.number="sanPhamMoi.gia" placeholder="Ví dụ: 15000" required :aria-invalid="!!loi.gia" :aria-describedby="loi.gia ? 'price-error' : null"><p v-if="loi.gia" id="price-error" class="field-error">{{ loi.gia }}</p></div>
+            <div class="field"><label for="new-category">Danh mục <span class="required">*</span></label><select id="new-category" v-model="sanPhamMoi.danhMuc" :aria-invalid="!!loi.danhMuc" :aria-describedby="loi.danhMuc ? 'category-error' : null"><option v-for="dm in cacDanhMuc" :key="dm" :value="dm">{{ dm }}</option></select><p v-if="loi.danhMuc" id="category-error" class="field-error">{{ loi.danhMuc }}</p></div>
+            <div class="field"><label for="new-stock">Số lượng tồn <span class="required">*</span></label><input id="new-stock" type="number" min="0" step="1" v-model.number="sanPhamMoi.tonKho" placeholder="Ví dụ: 20" required :aria-invalid="!!loi.tonKho" :aria-describedby="loi.tonKho ? 'stock-error' : 'stock-hint'"><p v-if="loi.tonKho" id="stock-error" class="field-error">{{ loi.tonKho }}</p><small v-else id="stock-hint" class="muted">Nhập số nguyên từ 0 trở lên.</small></div>
+            <button class="button primary full-width" type="submit">Thêm sản phẩm</button>
+          </form>
+        </aside>
+      </div>
+      <p class="page-note">Dữ liệu được lưu trong phiên hiện tại. Tải lại trang để trở về dữ liệu mẫu.</p>
+    </div>
+  </main>
+  <footer class="site-footer">Buổi 07 <span aria-hidden="true">·</span> Vue.js 3</footer>
+</body>
+</html>
