@@ -14,9 +14,9 @@ Vue và ảnh SVG được lưu cục bộ. Không cần npm, build, MySQL hoặ
 
 | Trang | Chức năng |
 | --- | --- |
-| `bai1.html`, `assets/bai1.js` | Tìm kiếm không phân biệt hoa/thường; lọc danh mục; sắp xếp không đổi mảng gốc; thêm và kiểm tra tên trùng; xóa có xác nhận; computed thống kê; watch từ khóa một ký tự; mounted đặt trạng thái Sẵn sàng. |
+| `bai1.html`, `assets/bai1.js` | Tìm kiếm có dấu/không dấu, hỗ trợ đ/Đ và không phân biệt hoa/thường; lọc danh mục; sắp xếp không đổi mảng gốc; thêm và kiểm tra tên trùng; xóa có xác nhận; computed thống kê; watch từ khóa một ký tự; mounted đặt trạng thái Sẵn sàng. |
 | `bai2.html`, `assets/bai2.js`, `components/TheSanPham.js` | Sáu sản phẩm qua component có props kiểu dữ liệu, required và default; mô tả mở độc lập; mua giảm tồn kho; hết hàng khóa nút Mua. |
-| `bai3.html`, `assets/bai3.js`, `components/DongGioHang.js` | Cha quản lý giỏ hàng; con nhận props và phát `doi-so-luong`, `yeu-cau-xoa`; số lượng nguyên 1-99; xóa có xác nhận; computed tổng số lượng và tổng tiền; trạng thái giỏ trống. |
+| `bai3.html`, `assets/bai3.js`, `components/DongGioHang.js` | Cha quản lý giỏ hàng; con nhận props và phát `doi-so-luong`, `yeu-cau-xoa`; số lượng nguyên 1-99; xóa ngay không hỏi xác nhận; computed tổng số lượng và tổng tiền; trạng thái giỏ trống. |
 
 Giỏ mẫu: **2 bút × 5.000 đ + 3 vở × 12.000 đ = 5 sản phẩm, 46.000 đ**.
 

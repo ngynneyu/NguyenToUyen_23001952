@@ -25,10 +25,10 @@ const bai1App = Vue.createApp({
   },
   computed: {
     sanPhamHienThi() {
-      const tuKhoa = this.tuKhoa.trim().toLocaleLowerCase('vi-VN');
+      const tuKhoa = this.chuanHoaTimKiem(this.tuKhoa);
       // filter tạo mảng mới; sort không thay đổi mảng sanPham gốc.
       const ketQua = this.sanPham.filter(sp =>
-        sp.ten.toLocaleLowerCase('vi-VN').includes(tuKhoa) &&
+        this.chuanHoaTimKiem(sp.ten).includes(tuKhoa) &&
         (!this.danhMuc || sp.danhMuc === this.danhMuc)
       );
       if (this.sapXep === 'tang') ketQua.sort((a, b) => a.gia - b.gia);
@@ -53,6 +53,13 @@ const bai1App = Vue.createApp({
     xoaBoLoc() { this.tuKhoa = ''; this.danhMuc = ''; this.sapXep = ''; },
     chuanHoaTen(ten) {
       return ten.normalize('NFC').trim().replace(/\s+/g, ' ');
+    },
+    chuanHoaTimKiem(chuoi) {
+      // Bỏ dấu tiếng Việt và chuyển cả đ/Đ thành d để tìm bằng từ khóa không dấu.
+      return this.chuanHoaTen(chuoi).normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[đĐ]/g, 'd')
+        .toLocaleLowerCase('vi-VN');
     },
     themSanPham() {
       const { ten, gia, danhMuc, tonKho } = this.sanPhamMoi;

@@ -32,7 +32,6 @@ const bai3App = Vue.createApp({
     xoaSanPham(id) {
       const sp = this.gioHang.find(sp => sp.id === id);
       if (!sp) { this.loi = 'Sản phẩm không tồn tại trong giỏ.'; return false; }
-      if (!window.confirm(`Bạn có chắc muốn xóa “${sp.ten}” khỏi giỏ hàng?`)) return false;
       this.gioHang = this.gioHang.filter(sp => sp.id !== id);
       this.loi = '';
       this.thongBao = `Đã xóa “${sp.ten}” khỏi giỏ.`;

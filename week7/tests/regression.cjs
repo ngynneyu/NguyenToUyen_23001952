@@ -52,10 +52,19 @@ function loadApp(file, definitions = {}) {
   equal(new Set(inventory.sanPham.map(sp => sp.danhMuc)).size, 3, 'Đủ 3 danh mục');
   equal(inventory.tongGiaTriTonKho, 2603000, 'Tổng tồn kho ban đầu');
   const original = inventory.sanPham.map(sp => sp.id).join(',');
-  inventory.tuKhoa = 'BÚT';
+  for (const [query, expectedIds] of [
+    ['but', '1,3'], ['BUT', '1,3'], ['BÚT', '1,3'], ['Bút'.normalize('NFD'), '1,3'],
+    ['vo', '2'], ['VỞ', '2'], ['den', '6'], ['ĐÈN', '6'], ['đèn', '6'],
+    ['DEN BAN MINI', '6'], ['cham bi', '4'], ['  so   tay  ', '4'],
+    ['', original], ['   ', original]
+  ]) {
+    inventory.tuKhoa = query;
+    equal(inventory.sanPhamHienThi.map(sp => sp.id).join(','), expectedIds, `Tìm có dấu/không dấu: ${query}`);
+  }
+  inventory.tuKhoa = 'BUT';
   inventory.danhMuc = 'Bút & dụng cụ';
   inventory.sapXep = 'giam';
-  equal(inventory.soSanPhamHienThi, 2, 'Kết hợp tìm không phân biệt hoa thường và lọc');
+  equal(inventory.soSanPhamHienThi, 2, 'Kết hợp tìm không dấu, không phân biệt hoa thường và lọc');
   equal(inventory.sanPhamHienThi[0].gia, 8000, 'Giá giảm dần');
   equal(inventory.tongGiaTriTonKho, 160000, 'Thống kê chỉ tính dữ liệu sau lọc');
   inventory.sapXep = 'tang';
@@ -186,18 +195,14 @@ function loadApp(file, definitions = {}) {
   const confirmCallsBeforeDelete = confirmCalls;
   equal(cart.xoaSanPham(12345), false, 'Từ chối xóa ID không tồn tại');
   equal(confirmCalls, confirmCallsBeforeDelete, 'ID không tồn tại không mở xác nhận');
-  const cartBeforeDelete = JSON.stringify(cart.gioHang);
   confirmResult = false;
-  equal(cart.xoaSanPham(1), false, 'Hủy xác nhận thì không xóa khỏi giỏ');
-  equal(confirmCalls, confirmCallsBeforeDelete + 1, 'Hỏi xác nhận khi xóa sản phẩm trong giỏ');
-  equal(JSON.stringify(cart.gioHang), cartBeforeDelete, 'Hủy xác nhận giữ nguyên toàn bộ giỏ hàng');
-  equal(cart.tongSoLuong, 102, 'Hủy xác nhận không đổi tổng số lượng');
-  equal(cart.tongTien, 531000, 'Hủy xác nhận không đổi tổng tiền');
-  confirmResult = true;
-  equal(cart.xoaSanPham(1), true, 'Đồng ý xác nhận mới xóa khỏi giỏ');
-  equal(cart.gioHang.length, 1, 'Sau xác nhận còn một dòng sản phẩm');
-  equal(cart.tongTien, 36000, 'Sau xác nhận cập nhật đúng tổng tiền');
-  equal(cart.xoaSanPham(2), true, 'Xác nhận xóa sản phẩm cuối cùng');
+  equal(cart.xoaSanPham(1), true, 'Xóa ngay khỏi giỏ mà không phụ thuộc xác nhận');
+  equal(confirmCalls, confirmCallsBeforeDelete, 'Xóa giỏ không mở hộp thoại xác nhận');
+  equal(cart.gioHang.length, 1, 'Xóa xong còn một dòng sản phẩm');
+  equal(cart.tongSoLuong, 3, 'Xóa xong cập nhật đúng tổng số lượng');
+  equal(cart.tongTien, 36000, 'Xóa xong cập nhật đúng tổng tiền');
+  equal(cart.xoaSanPham(2), true, 'Xóa ngay sản phẩm cuối cùng');
+  equal(confirmCalls, confirmCallsBeforeDelete, 'Xóa sản phẩm cuối cùng cũng không mở xác nhận');
   equal(cart.gioHang.length, 0, 'Xóa hết giỏ hàng');
   equal(cart.tongSoLuong, 0, 'Giỏ trống: tổng lượng 0');
   equal(cart.tongTien, 0, 'Giỏ trống: tổng tiền 0');

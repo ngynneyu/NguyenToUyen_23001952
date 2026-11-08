@@ -4,7 +4,7 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bài 1 · Quản lý sản phẩm</title>
   <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css?v=2">
-  <script defer src="assets/vendor/vue.global.prod.js"></script><script defer src="assets/bai1.js?v=3"></script>
+  <script defer src="assets/vendor/vue.global.prod.js"></script><script defer src="assets/bai1.js?v=4"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Đến nội dung chính</a>
@@ -23,7 +23,7 @@
         <section class="panel inventory-panel" aria-labelledby="list-title">
           <div class="panel-heading"><h2 id="list-title">Danh sách sản phẩm</h2><button class="text-button" type="button" @click="xoaBoLoc">Xóa bộ lọc</button></div>
           <div class="filters">
-            <div class="field search-field"><label for="search">Tìm theo tên</label><input id="search" type="search" v-model="tuKhoa" placeholder="Nhập tên sản phẩm…" :aria-describedby="thongBaoTimKiem ? 'search-hint' : null"></div>
+            <div class="field search-field"><label for="search">Tìm theo tên</label><input id="search" type="search" v-model="tuKhoa" placeholder="Nhập tên có dấu hoặc không dấu…" :aria-describedby="thongBaoTimKiem ? 'search-hint' : null"></div>
             <div class="field"><label for="category">Danh mục</label><select id="category" v-model="danhMuc"><option value="">Tất cả danh mục</option><option v-for="dm in cacDanhMuc" :key="dm" :value="dm">{{ dm }}</option></select></div>
             <div class="field"><label for="sort">Sắp xếp theo giá</label><select id="sort" v-model="sapXep"><option value="">Thứ tự ban đầu</option><option value="tang">Giá tăng dần</option><option value="giam">Giá giảm dần</option></select></div>
           </div>
