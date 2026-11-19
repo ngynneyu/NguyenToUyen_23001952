@@ -1,0 +1,6 @@
+Options -Indexes
+Header set X-Content-Type-Options "nosniff"
+
+<FilesMatch "^(?![a-f0-9]{32}\.(?:jpg|png)$).+">
+    Require all denied
+</FilesMatch>
